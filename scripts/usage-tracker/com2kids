@@ -1,0 +1,54 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          com2kids
+# Required-Start:    $syslog
+# Required-Stop:     $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Usage tracker daemon
+### END INIT INFO
+
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+LOGDIR=/var/log/com2kids
+LOG=/var/log/com2kids/usage.log
+LOC=Thapla2
+URL="https://com2kids-5be26.firebaseio.com/thapla2/usage.json"
+
+. /lib/init/vars.sh
+. /lib/lsb/init-functions
+
+if [ ! -d $LOGDIR ]; then
+	echo "Creating com2kids log dir"
+	mkdir -p $LOGDIR
+fi
+
+case "$1" in
+    start)
+	echo "COM2KIDS: START"
+	echo "{" > $LOG
+	echo "\"LOC\": \"$LOC\"," >> $LOG
+	echo "\"HOST\": \"`hostname`\"," >> $LOG
+	echo "\"STARTDT\":\"`date`\"" >> $LOG
+	echo "}" >> $LOG
+	curl -X POST -d "`cat $LOG`" $URL
+	
+        ;;
+    restart|reload|force-reload)
+        echo "Error: argument "$1" not supported" >&2
+        exit 3
+        ;;
+    stop)
+	echo "COM2KIDS: SHUTDOWN"
+	echo "{" > $LOG
+	echo "\"LOC\": \"$LOC\"," >> $LOG
+	echo "\"HOST\": \"`hostname`\"," >> $LOG
+	echo "\"STOPDT\":\"`date`\"" >> $LOG
+	echo "}" >> $LOG
+	curl -X POST -d "`cat $LOG`" $URL
+        ;;
+    *)
+        echo "Usage: $0 start|stop" >&2
+        exit 3
+        ;;
+esac
