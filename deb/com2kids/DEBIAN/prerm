@@ -1,0 +1,4 @@
+#! /bin/sh
+
+rm -rf /home/student/Desktop/eLearning
+rm -rf /var/log/com2kids/

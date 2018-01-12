@@ -1,0 +1,9 @@
+Package: com2kids
+Version: 1.0-1
+Section: base
+Priority: optional
+Architecture: all
+Depends: curl
+Maintainer: Suravee Suthikulpanit <suravee@gmail.com>
+Description: com2kids package
+ Setup com2kids scripts
