@@ -13,7 +13,7 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 LOGDIR=/var/log/com2kids
 LOG=/var/log/com2kids/usage.log
 LOC=Banmaesin
-URL="https://com2kids-5be26.firebaseio.com/thapla2/usage.json"
+URL="https://com2kids-5be26.firebaseio.com/${LOC}/usage.json"
 
 . /lib/init/vars.sh
 . /lib/lsb/init-functions
