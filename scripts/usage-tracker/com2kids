@@ -1,18 +1,18 @@
 #! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          com2kids
-# Required-Start:    $syslog
-# Required-Stop:     $syslog
+# Required-Start:    $syslog $network $named $time
+# Required-Stop:     $syslog $network $named $time
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Usage tracker daemon
 ### END INIT INFO
 
-
+VER="1.1"
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 LOGDIR=/var/log/com2kids
 LOG=/var/log/com2kids/usage.log
-LOC=Banmaesin
+LOC=anonymous
 URL="https://com2kids-5be26.firebaseio.com/${LOC}/usage.json"
 
 . /lib/init/vars.sh
@@ -25,11 +25,12 @@ fi
 
 case "$1" in
     start)
-	echo "COM2KIDS: START"
+	echo "com2kids: START"
 	echo "{" > $LOG
+	echo "\"VER\": \"$VER\"," >> $LOG
 	echo "\"LOC\": \"$LOC\"," >> $LOG
 	echo "\"HOST\": \"`hostname`\"," >> $LOG
-	echo "\"STARTDT\":\"`date`\"" >> $LOG
+	echo "\"STARTDT\":\"`date --iso-8601=seconds`\"" >> $LOG
 	echo "}" >> $LOG
 	curl -X POST -d "`cat $LOG`" $URL
 	
@@ -39,11 +40,12 @@ case "$1" in
         exit 3
         ;;
     stop)
-	echo "COM2KIDS: SHUTDOWN"
+	echo "com2kids: SHUTDOWN"
 	echo "{" > $LOG
+	echo "\"VER\": \"$VER\"," >> $LOG
 	echo "\"LOC\": \"$LOC\"," >> $LOG
 	echo "\"HOST\": \"`hostname`\"," >> $LOG
-	echo "\"STOPDT\":\"`date`\"" >> $LOG
+	echo "\"STOPDT\":\"`date --iso-8601=seconds`\"" >> $LOG
 	echo "}" >> $LOG
 	curl -X POST -d "`cat $LOG`" $URL
         ;;
